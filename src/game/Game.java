@@ -8,11 +8,13 @@ public class Game {
 
     private int[][] field;
     private boolean[][] clicks;
+    private boolean[][] flags;
 
     private int xLength;
     private int yLength;
 
     private boolean gameOver;
+    private boolean gameWin;
 
     public Game(){
         this(Constantes.DEFAULT_xLENGTH, Constantes.DEFAULT_yLENGTH);
@@ -21,14 +23,17 @@ public class Game {
     public Game(int xLength, int yLength){
         this.field = new int[xLength][yLength];
         this.clicks = new boolean[xLength][yLength];
+        this.flags = new boolean[xLength][yLength];
         this.yLength = yLength;
         this.xLength = xLength;
         this.gameOver = false;
+        this.gameWin = false;
 
-        //init clicks array
+        //init clicks and flags arrays
         for(int x = 0; x < this.xLength; x++){
             for(int y = 0; y < this.yLength; y++){
                 this.clicks[x][y] = false;
+                this.flags[x][y] = false;
             }
         }
     }
@@ -91,51 +96,76 @@ public class Game {
     }
 
     public void click(int x, int y){
-        this.clicks[x][y] = true;
-        if(this.field[x][y] == Constantes.MINE){
-            setGameOver(true);
-        } else if(this.field[x][y] == 0){
-            if(x > 0){
-                if(!this.clicks[x-1][y]){
-                    click(x-1,y);
-                }
-                if(y > 0){
-                    if(!this.clicks[x-1][y-1]) {
-                        click(x - 1, y - 1);
+        if(!this.flags[x][y] && !this.clicks[x][y]) {
+            this.clicks[x][y] = true;
+            if (this.field[x][y] == Constantes.MINE) {
+                setGameOver(true);
+            } else if (this.field[x][y] == 0) {
+                if (x > 0) {
+                    if (!this.clicks[x - 1][y]) {
+                        click(x - 1, y);
+                    }
+                    if (y > 0) {
+                        if (!this.clicks[x - 1][y - 1]) {
+                            click(x - 1, y - 1);
+                        }
+                    }
+                    if (y < this.yLength - 1) {
+                        if (!this.clicks[x - 1][y + 1]) {
+                            click(x - 1, y + 1);
+                        }
                     }
                 }
-                if(y < this.yLength - 1){
-                    if(!this.clicks[x-1][y+1]) {
-                        click(x - 1, y + 1);
+                if (x < this.xLength - 1) {
+                    if (!this.clicks[x + 1][y]) {
+                        click(x + 1, y);
+                    }
+                    if (y > 0) {
+                        if (!this.clicks[x + 1][y - 1]) {
+                            click(x + 1, y - 1);
+                        }
+                    }
+                    if (y < this.yLength - 1) {
+                        if (!this.clicks[x + 1][y + 1]) {
+                            click(x + 1, y + 1);
+                        }
                     }
                 }
-            }
-            if(x < this.xLength-1){
-                if(!this.clicks[x+1][y]) {
-                    click(x + 1, y);
-                }
-                if(y > 0){
-                    if(!this.clicks[x+1][y-1]) {
-                        click(x + 1, y - 1);
+                if (y > 0) {
+                    if (!this.clicks[x][y - 1]) {
+                        click(x, y - 1);
                     }
                 }
-                if(y < this.yLength - 1){
-                    if(!this.clicks[x+1][y+1]) {
-                        click(x + 1, y + 1);
+                if (y < yLength - 1) {
+                    if (!this.clicks[x][y + 1]) {
+                        click(x, y + 1);
                     }
-                }
-            }
-            if(y > 0){
-                if(!this.clicks[x][y-1]) {
-                    click(x, y - 1);
-                }
-            }
-            if(y < yLength-1){
-                if(!this.clicks[x][y+1]) {
-                    click(x, y + 1);
                 }
             }
         }
+    }
+
+    public void plantFlag(int x, int y){
+        if(!this.clicks[x][y]){
+            this.flags[x][y] = !this.flags[x][y];
+            verifyGameWin();
+        }
+    }
+
+    public void verifyGameWin(){
+        boolean win = true;
+        for(int x = 0; x < xLength; x++){
+            for (int y = 0; y < yLength; y++){
+                if(!this.flags[x][y] && this.field[x][y] == Constantes.MINE){
+                    win = false;
+                    break;
+                }
+            }
+            if(!win){
+                break;
+            }
+        }
+        this.gameWin = win;
     }
 
     // *****************
@@ -159,6 +189,14 @@ public class Game {
 
     public void setClicks(boolean[][] clicks) {
         this.clicks = clicks;
+    }
+
+    public boolean[][] getFlags() {
+        return flags;
+    }
+
+    public void setFlags(boolean[][] flags) {
+        this.flags = flags;
     }
 
     public int getXLength() {
@@ -185,6 +223,14 @@ public class Game {
         this.gameOver = gameOver;
     }
 
+    public boolean isGameWin() {
+        return gameWin;
+    }
+
+    public void setGameWin(boolean gameWin) {
+        this.gameWin = gameWin;
+    }
+
     @Override
     public String toString() {
         String s = "";
@@ -202,4 +248,7 @@ public class Game {
     }
 
 
+    public boolean isOver() {
+        return isGameOver() || isGameWin();
+    }
 }

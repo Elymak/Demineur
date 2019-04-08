@@ -37,19 +37,40 @@ public class FieldView extends JPanel implements MouseListener {
         int xPos = x * s;
         int yPos = y * s;
 
-        if(!this.game.getClicks()[x][y]){
-            g2.setColor(Color.GRAY);
+        //drapeaux
+        if(this.game.getFlags()[x][y]){
+            g2.setColor(Color.BLUE); //couleur de base du drapeau
+            if(this.game.isOver()){
+                if(this.game.getField()[x][y] == Constantes.MINE){
+                    g2.setColor(Color.GREEN); //drapeau bien placé
+                } else {
+                    g2.setColor(Color.ORANGE); //drapeau mal placé
+                }
+            }
             g2.fillRect(yPos, xPos, s, s);
-        } else if (this.game.getField()[x][y] != Constantes.MINE) {
+        }
+
+        //endroit non découvert
+        else if(!this.game.getClicks()[x][y]){
+            g2.setColor(Color.GRAY);
+            if(this.game.isOver() && this.game.getField()[x][y] == Constantes.MINE){
+                g2.setColor(Color.BLACK); //jeu fini = on révèle les mines non découvertes
+            }
+            g2.fillRect(yPos, xPos, s, s);
+        }
+
+        //endroit découvert
+        else if (this.game.getField()[x][y] != Constantes.MINE) {
             g2.setColor(Color.LIGHT_GRAY);
             g2.fillRect(yPos, xPos, s, s);
             g2.setColor(Color.WHITE);
             g2.drawString(this.game.getField()[x][y]+"", (yPos), (xPos + s));
-        } else {
+        }
+
+        //mine explosée
+        else {
             g2.setColor(Color.RED);
             g2.fillRect(yPos, xPos, s, s);
-            g2.setColor(Color.BLACK);
-            g2.drawString("X", (yPos), (xPos + s));
         }
     }
 
@@ -61,13 +82,19 @@ public class FieldView extends JPanel implements MouseListener {
         int x = xClick / Constantes.DEFAULT_MINE_SIZE;
         int y = yClick / Constantes.DEFAULT_MINE_SIZE;
         boolean isLeftClick = SwingUtilities.isLeftMouseButton(e);
+        boolean isRightClick = SwingUtilities.isRightMouseButton(e);
         boolean isInBounds = x < Constantes.DEFAULT_xLENGTH && y < Constantes.DEFAULT_yLENGTH;
 
-        if(isLeftClick && isInBounds) {
-            System.out.println(xClick+":"+yClick + " > " + x+":"+y);
-            this.game.click(y, x);
-            this.observable.setChanged();
-            this.observable.notifyObserver();
+        if(isInBounds) {
+            if(isLeftClick) {
+                this.game.click(y, x);
+                this.observable.setChanged();
+                this.observable.notifyObserver();
+            } else if (isRightClick){
+                this.game.plantFlag(y, x);
+                this.observable.setChanged();
+                this.observable.notifyObserver();
+            }
         }
     }
 

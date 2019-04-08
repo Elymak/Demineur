@@ -28,11 +28,10 @@ public class MainView extends JFrame implements FieldObserver {
 
     @Override
     public void update() {
-        this.getContentPane().repaint();
-        if(this.fieldView.getGame().isGameOver()){
-            System.out.println("PERDU");
+        if(this.fieldView.getGame().isGameOver() || this.fieldView.getGame().isGameWin()){
             this.fieldView.removeMouseListener();
         }
+        this.getContentPane().repaint();
     }
     
     public void newGame(){

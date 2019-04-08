@@ -1,10 +1,10 @@
-package view
+package view;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JMenuBar implements ActionListnener {
+public class Menu extends JMenuBar implements ActionListener {
 
   private static final String FILE_LABEL = "Fichier";
   private static final String NEW_GAME_LABEL = "Nouvelle Partie";
