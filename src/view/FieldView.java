@@ -102,4 +102,8 @@ public class FieldView extends JPanel implements MouseListener {
     public void removeMouseListener() {
         this.removeMouseListener(this);
     }
+    
+    public void reactivateListener(){
+        this.addMouseListener(this);
+    }
 }
