@@ -7,4 +7,5 @@ public class Constantes {
     public static final int DEFAULT_yLENGTH = 20;
 
     public static final int DEFAULT_MINE_SIZE = 20;
+    public static final int DEFAULT_MINE_PROPORTION = 15;
 }

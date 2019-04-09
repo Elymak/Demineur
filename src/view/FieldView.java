@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 
 public class FieldView extends JPanel implements MouseListener {
 
+    private static final int OFFSET = Constantes.DEFAULT_MINE_SIZE;
     private Game game;
     private FieldObservable observable;
 
@@ -25,17 +26,19 @@ public class FieldView extends JPanel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        this.setBackground(Color.WHITE);
         for(int x = 0; x < this.game.getXLength(); x++){
             for(int y = 0; y < this.game.getYLength(); y++){
                 this.paintField(x, y, g2);
             }
         }
+        drawGrid(g2);
     }
 
     private void paintField(int x, int y, Graphics2D g2) {
         int s = Constantes.DEFAULT_MINE_SIZE;
-        int xPos = x * s;
-        int yPos = y * s;
+        int xPos = (x * s) + OFFSET;
+        int yPos = (y * s) + OFFSET;
 
         //drapeaux
         if(this.game.getFlags()[x][y]){
@@ -63,8 +66,8 @@ public class FieldView extends JPanel implements MouseListener {
         else if (this.game.getField()[x][y] != Constantes.MINE) {
             g2.setColor(Color.LIGHT_GRAY);
             g2.fillRect(yPos, xPos, s, s);
-            g2.setColor(Color.WHITE);
-            g2.drawString(this.game.getField()[x][y]+"", (yPos), (xPos + s));
+            g2.setColor(Color.BLACK);
+            g2.drawString(this.game.getField()[x][y]+"", (yPos + (s/2) - 3), (xPos + s-4));
         }
 
         //mine explosée
@@ -74,16 +77,30 @@ public class FieldView extends JPanel implements MouseListener {
         }
     }
 
+    private void drawGrid(Graphics2D g2){
+        int s = Constantes.DEFAULT_MINE_SIZE;
+        int xEdge = (this.game.getXLength() * s) + OFFSET;
+        int yEdge = (this.game.getYLength() * s) + OFFSET;
+        g2.setColor(Color.BLACK);
+
+        for(int x = 0; x < this.game.getXLength() + 1; x++){
+            for(int y = 0; y < this.game.getYLength() + 1; y++){
+                g2.drawLine(OFFSET, y * s + OFFSET, xEdge, y * s + OFFSET);
+                g2.drawLine(x * s + OFFSET, OFFSET, x * s + OFFSET, yEdge);
+            }
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int xClick = e.getX();
         int yClick = e.getY();
 
-        int x = xClick / Constantes.DEFAULT_MINE_SIZE;
-        int y = yClick / Constantes.DEFAULT_MINE_SIZE;
+        int x = (xClick - OFFSET) / Constantes.DEFAULT_MINE_SIZE;
+        int y = (yClick - OFFSET) / Constantes.DEFAULT_MINE_SIZE;
         boolean isLeftClick = SwingUtilities.isLeftMouseButton(e);
         boolean isRightClick = SwingUtilities.isRightMouseButton(e);
-        boolean isInBounds = x < Constantes.DEFAULT_xLENGTH && y < Constantes.DEFAULT_yLENGTH;
+        boolean isInBounds = x < Constantes.DEFAULT_xLENGTH && y < Constantes.DEFAULT_yLENGTH && x > -1 && y > -1;
 
         if(isInBounds) {
             if(isLeftClick) {
