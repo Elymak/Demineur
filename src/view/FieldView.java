@@ -67,7 +67,9 @@ public class FieldView extends JPanel implements MouseListener {
             g2.setColor(Color.LIGHT_GRAY);
             g2.fillRect(yPos, xPos, s, s);
             g2.setColor(Color.BLACK);
-            g2.drawString(this.game.getField()[x][y]+"", (yPos + (s/2) - 3), (xPos + s-4));
+            if(this.game.getField()[x][y] != 0) {
+                g2.drawString(this.game.getField()[x][y] + "", (yPos + (s / 2) - 3), (xPos + s - 4));
+            }
         }
 
         //mine explosée
