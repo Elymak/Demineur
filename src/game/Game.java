@@ -15,6 +15,7 @@ public class Game {
 
     private boolean gameOver;
     private boolean gameWin;
+    private boolean hasMinesGenerated;
 
     public Game(){
         this(Constantes.DEFAULT_xLENGTH, Constantes.DEFAULT_yLENGTH);
@@ -28,6 +29,7 @@ public class Game {
         this.xLength = xLength;
         this.gameOver = false;
         this.gameWin = false;
+        this.hasMinesGenerated = false;
 
         //init clicks and flags arrays
         for(int x = 0; x < this.xLength; x++){
@@ -38,7 +40,7 @@ public class Game {
         }
     }
 
-    public void addMines(int mineProportion){
+    public void generateRandomMines(int mineProportion){
         int nbMines = this.yLength * this.xLength * mineProportion / 100;
 
         for(int i = 0; i < nbMines; i++){
@@ -46,12 +48,13 @@ public class Game {
             while (!mineOk){
                 int x = new Random().nextInt(this.xLength);
                 int y = new Random().nextInt(this.yLength);
-                if(this.field[x][y] != Constantes.MINE){
+                if(this.field[x][y] != Constantes.MINE && !this.clicks[x][y]){
                     this.field[x][y] =  Constantes.MINE;
                     mineOk = true;
                 }
             }
         }
+        this.hasMinesGenerated = true;
         this.calculateNeighbours();
     }
 
@@ -96,7 +99,16 @@ public class Game {
     }
 
     public void click(int x, int y){
-        if(!this.flags[x][y] && !this.clicks[x][y]) {
+        //les mines n'ont pas encore été posées
+        if(!hasMinesGenerated) {
+            this.clicks[x][y] = true;
+            this.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
+            // on reset le champ dans le cas où on a cliqué sur une case sans mine voisine pour
+            // call la méthode en récursif
+            this.clicks[x][y] = false;
+            this.click(x, y);
+        } else if(!this.flags[x][y] && !this.clicks[x][y]) {
+            //si pas de drapeau planté sur la case et si la case n'est pas déjà révélée
             this.clicks[x][y] = true;
             if (this.field[x][y] == Constantes.MINE) {
                 setGameOver(true);
@@ -229,6 +241,10 @@ public class Game {
 
     public void setGameWin(boolean gameWin) {
         this.gameWin = gameWin;
+    }
+
+    public boolean isHasMinesGenerated() {
+        return hasMinesGenerated;
     }
 
     @Override

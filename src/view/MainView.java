@@ -14,7 +14,7 @@ public class MainView extends JFrame implements FieldObserver {
     public MainView(){
 
         this.game = new Game();
-        this.game.addMines(Constantes.DEFAULT_MINE_PROPORTION);
+//        this.game.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
 
         this.setTitle("Demineur");
         this.setJMenuBar(new Menu(this));
@@ -44,7 +44,7 @@ public class MainView extends JFrame implements FieldObserver {
     
     public void newGame(){
         Game newGame = new Game();
-        newGame.addMines(Constantes.DEFAULT_MINE_PROPORTION);
+//        newGame.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
         this.fieldView.setGame(newGame);
         this.fieldView.reactivateListener();
         this.update();
