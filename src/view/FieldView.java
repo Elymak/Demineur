@@ -1,5 +1,6 @@
 package view;
 
+import config.Config;
 import constantes.Constantes;
 import game.Game;
 import observer.FieldObservable;
@@ -81,12 +82,12 @@ public class FieldView extends JPanel implements MouseListener {
 
     private void drawGrid(Graphics2D g2){
         int s = Constantes.DEFAULT_MINE_SIZE;
-        int xEdge = (this.game.getXLength() * s) + OFFSET;
-        int yEdge = (this.game.getYLength() * s) + OFFSET;
+        int xEdge = (this.game.getYLength() * s) + OFFSET;
+        int yEdge = (this.game.getXLength() * s) + OFFSET;
         g2.setColor(Color.BLACK);
 
-        for(int x = 0; x < this.game.getXLength() + 1; x++){
-            for(int y = 0; y < this.game.getYLength() + 1; y++){
+        for(int x = 0; x < this.game.getYLength() + 1; x++){
+            for(int y = 0; y < this.game.getXLength() + 1; y++){
                 g2.drawLine(OFFSET, y * s + OFFSET, xEdge, y * s + OFFSET);
                 g2.drawLine(x * s + OFFSET, OFFSET, x * s + OFFSET, yEdge);
             }
@@ -102,7 +103,7 @@ public class FieldView extends JPanel implements MouseListener {
         int y = (yClick - OFFSET) / Constantes.DEFAULT_MINE_SIZE;
         boolean isLeftClick = SwingUtilities.isLeftMouseButton(e);
         boolean isRightClick = SwingUtilities.isRightMouseButton(e);
-        boolean isInBounds = x < Constantes.DEFAULT_xLENGTH && y < Constantes.DEFAULT_yLENGTH && x > -1 && y > -1;
+        boolean isInBounds = x < Config.getInstance().getyLength() && y < Config.getInstance().getxLength() && x > -1 && y > -1;
 
         if(isInBounds) {
             if(isLeftClick) {

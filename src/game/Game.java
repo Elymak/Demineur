@@ -1,11 +1,11 @@
 package game;
 
+import config.Config;
 import constantes.Constantes;
 
 import java.util.Random;
 
 public class Game {
-
     private int[][] field;
     private boolean[][] clicks;
     private boolean[][] flags;
@@ -18,7 +18,7 @@ public class Game {
     private boolean hasMinesGenerated;
 
     public Game(){
-        this(Constantes.DEFAULT_xLENGTH, Constantes.DEFAULT_yLENGTH);
+        this(Config.getInstance().getxLength(), Config.getInstance().getyLength());
     }
 
     public Game(int xLength, int yLength){
@@ -40,8 +40,7 @@ public class Game {
         }
     }
 
-    public void generateRandomMines(int mineProportion){
-        int nbMines = this.yLength * this.xLength * mineProportion / 100;
+    public void generateRandomMines(int nbMines){
 
         for(int i = 0; i < nbMines; i++){
             boolean mineOk = false;
@@ -102,7 +101,7 @@ public class Game {
         //les mines n'ont pas encore été posées
         if(!hasMinesGenerated) {
             this.clicks[x][y] = true;
-            this.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
+            this.generateRandomMines(Config.getInstance().getNbMines());
             // on reset le champ dans le cas où on a cliqué sur une case sans mine voisine pour
             // call la méthode en récursif
             this.clicks[x][y] = false;

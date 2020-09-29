@@ -1,5 +1,6 @@
 package view;
 
+import config.Config;
 import constantes.Constantes;
 import game.Game;
 import observer.FieldObserver;
@@ -8,19 +9,16 @@ import javax.swing.*;
 
 public class MainView extends JFrame implements FieldObserver {
 
-    private Game game;
     private FieldView fieldView;
 
     public MainView(){
-
-        this.game = new Game();
-//        this.game.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
+        Game game = new Game();
 
         this.setTitle("Demineur");
         this.setJMenuBar(new Menu(this));
 
-        int frameWidth = (Constantes.DEFAULT_xLENGTH + 3) * Constantes.DEFAULT_MINE_SIZE;
-        int frameHeight = (Constantes.DEFAULT_yLENGTH + 5) * Constantes.DEFAULT_MINE_SIZE;
+        int frameWidth = (Config.getInstance().getyLength() + 3) * Constantes.DEFAULT_MINE_SIZE;
+        int frameHeight = (Config.getInstance().getxLength() + 5) * Constantes.DEFAULT_MINE_SIZE;
         this.setSize(frameWidth,frameHeight);
 
 
@@ -44,7 +42,6 @@ public class MainView extends JFrame implements FieldObserver {
     
     public void newGame(){
         Game newGame = new Game();
-//        newGame.generateRandomMines(Constantes.DEFAULT_MINE_PROPORTION);
         this.fieldView.setGame(newGame);
         this.fieldView.reactivateListener();
         this.update();

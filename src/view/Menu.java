@@ -8,6 +8,7 @@ public class Menu extends JMenuBar implements ActionListener {
 
     private static final String FILE_LABEL = "Fichier";
     private static final String NEW_GAME_LABEL = "Nouvelle Partie";
+    private static final String PARAM_LABEL = "Paramètres";
     private static final String EXIT_LABEL = "Quitter";
 
     private MainView mainView;
@@ -33,6 +34,8 @@ public class Menu extends JMenuBar implements ActionListener {
         JMenuItem source = (JMenuItem) (e.getSource());
         if (NEW_GAME_LABEL.equals(source.getText())) {
             this.mainView.newGame();
+        } else if (PARAM_LABEL.equals(source.getText())){
+            ParamView paramView = new ParamView(this.mainView);
         } else if (EXIT_LABEL.equals(source.getText())) {
             System.exit(0);
         }
