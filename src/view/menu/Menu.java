@@ -1,4 +1,7 @@
-package view;
+package view.menu;
+
+import view.MainView;
+import view.frame.DifficultyChoiceFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,6 +14,8 @@ public class Menu extends JMenuBar implements ActionListener {
     private static final String EXIT_LABEL = "Quitter";
 
     private MainView mainView;
+
+    private DifficultyChoiceFrame difficultyChoiceFrame;
 
     public Menu(MainView mainView) {
         this.mainView = mainView;
@@ -32,7 +37,8 @@ public class Menu extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JMenuItem source = (JMenuItem) (e.getSource());
         if (NEW_GAME_LABEL.equals(source.getText())) {
-            this.mainView.newGame();
+            difficultyChoiceFrame = new DifficultyChoiceFrame(this.mainView);
+            this.mainView.getFieldView().removeMouseListener();
         } else if (EXIT_LABEL.equals(source.getText())) {
             System.exit(0);
         }
