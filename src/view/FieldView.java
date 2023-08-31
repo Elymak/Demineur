@@ -66,8 +66,8 @@ public class FieldView extends JPanel implements MouseListener {
         else if (this.game.getField()[x][y] != Constantes.MINE) {
             g2.setColor(Color.LIGHT_GRAY);
             g2.fillRect(yPos, xPos, s, s);
-            g2.setColor(Color.BLACK);
             if(this.game.getField()[x][y] != 0) {
+                g2.setColor(getTextColor(this.game.getField()[x][y]));
                 g2.drawString(this.game.getField()[x][y] + "", (yPos + (s / 2) - 3), (xPos + s - 4));
             }
         }
@@ -77,6 +77,20 @@ public class FieldView extends JPanel implements MouseListener {
             g2.setColor(Color.RED);
             g2.fillRect(yPos, xPos, s, s);
         }
+    }
+
+    private Color getTextColor(int nbNeighbours) {
+        return switch (nbNeighbours) {
+            case 1 -> Color.BLUE;
+            case 2 -> Color.GREEN;
+            case 3 -> Color.RED;
+            case 4 -> Color.MAGENTA;
+            case 5 -> Color.YELLOW;
+            case 6 -> Color.CYAN;
+            case 7 -> Color.ORANGE;
+            case 8 -> Color.PINK;
+            default -> Color.BLACK;
+        };
     }
 
     private void drawGrid(Graphics2D g2){
